@@ -57,6 +57,6 @@ export default function truncate(options?: TruncateOptions): Promise<any[]> {
 
 this function can be called this way:
 
-```
-await truncate({ cascade: true});
+```typescript
+await truncate({ cascade: true });
 ```
