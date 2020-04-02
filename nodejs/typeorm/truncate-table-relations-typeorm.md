@@ -10,7 +10,7 @@ The provided `clear` method of Typeorm could not truncate/drop tables that are r
 
 The application has an util file named `truncate.ts`, in which iterates through an array of database entities and, on each iteration, it called the method delete with no parameters `.delete({})` to exclude the records:
 
-```
+```typescript
 export default function truncate(): Promise<DeleteResult[]> {
   return Promise.all(
     Object.keys(models).map(key => {
@@ -30,27 +30,27 @@ The solution adopted was use entity `query` method instead `delete` and do a che
 
 The updated version:
 
-```
+```typescript
 export default function truncate(options?: TruncateOptions): Promise<any[]> {
   return Promise.all(
     Object.keys(models).map(key => {
-      /*get the typeorm active connection
+      // get the typeorm active connection
       const connection = getConnection();
 
-      /*get tableName from connection metadata*/
+      // get tableName from connection metadata
       const tableName = connection.getMetadata(models[Number(key)]).tablePath;
 
       /*check it database is postgres*/
       const isPostgres =
-        connection.options.type && connection.options.type === 'postgres';
+        connection.options.type && connection.options.type === "postgres";
 
-      /*iterate over entity array calling the raw truncate query*/
+      // iterate over entity array calling the raw truncate query
       return models[Number(key)].query(
         `TRUNCATE TABLE ${tableName} ${
-          isPostgres && options && options.cascade ? 'CASCADE' : ''
-        }`,
+          isPostgres && options && options.cascade ? "CASCADE" : ""
+        }`
       );
-    }),
+    })
   );
 }
 ```
